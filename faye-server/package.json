@@ -1,0 +1,14 @@
+{
+  "name": "simple-fay-eserver",
+  "version": "1.0.0",
+  "description": "simple faye server with logging",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "John Biundo <johnfbiundo@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "faye": "^1.2.4"
+  }
+}

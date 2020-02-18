@@ -1,0 +1,22 @@
+{
+  "name": "faye-customer-service",
+  "version": "1.0.0",
+  "description": "Faye customer service",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/service"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "faye": "^1.2.4",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.5.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4",
+    "prettier": "^1.18.2"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "faye-customer-app",
+  "version": "1.0.0",
+  "description": "Faye customer app",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "add-customer": "node dist/customer-app add",
+    "get-customers": "node dist/customer-app get"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "faye": "^1.2.4",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.5.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4",
+    "prettier": "^1.18.2"
+  }
+}
