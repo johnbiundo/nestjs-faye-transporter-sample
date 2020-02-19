@@ -9,30 +9,18 @@ let client;
 /**
  * Issue 'get-customers' request, return response from message broker
  *
- * @param customerId
- * @param requestId
- * @param requestDelay
+ * @param customerId - id of customer to return
  */
-async function getCustomers(customerId, requestId = 0, requestDelay = 0) {
+async function getCustomers(customerId) {
   // build Nest-shaped message
-  const payload = getPayload(
-    '/get-customers',
-    customerId
-      ? { customerId, requestId, requestDelay }
-      : { requestId, requestDelay },
-    uuid(),
-  );
+  const payload = getPayload('/get-customers', { customerId }, uuid());
 
   return new Promise((resolve, reject) => {
     // subscribe to the response message
     const subscription = client.subscribe('/get-customers_res', result => {
-      // handle either objects or stringified results since Nest stringfies,
-      // but Faye client lib automatically serializes/deserializes objects
-      const parsedResult = parseResult(result);
-
       console.log(
-        `==> Receiving 'get-customers' reply (request: ${requestId}): \n${JSON.stringify(
-          parsedResult.response,
+        `==> Receiving 'get-customers' reply: \n${JSON.stringify(
+          result.response,
           null,
           2,
         )}\n`,
@@ -62,7 +50,7 @@ async function getCustomers(customerId, requestId = 0, requestDelay = 0) {
 /**
  * Issue 'add-customer' event
  *
- * @param name
+ * @param name - name of customer to add
  */
 async function addCustomer(name) {
   const payload = getPayload('/add-customer', { name });
@@ -88,6 +76,13 @@ function usage() {
   process.exit(0);
 }
 
+/**
+ * Build Nest-shaped payload
+ *
+ * @param pattern string - message pattern
+ * @param value any - payload value
+ * @param id number - optional (used only for requests) message Id
+ */
 function getPayload(pattern, value, id?) {
   let payload = {
     pattern: pattern,
@@ -97,14 +92,6 @@ function getPayload(pattern, value, id?) {
     payload = Object.assign(payload, { id });
   }
   return payload;
-}
-
-function parseResult(content) {
-  try {
-    return JSON.parse(content);
-  } catch {
-    return content;
-  }
 }
 
 async function main() {
