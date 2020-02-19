@@ -11,7 +11,7 @@ let client;
 /**
  * callback handler. This is registered for '/get-customers' topic.
  *
- * @param message
+ * @param packet inbound request payload
  */
 function getCustomers(packet): void {
   const message = parsePacket(packet);
@@ -29,21 +29,7 @@ function getCustomers(packet): void {
         )
       : customerList;
 
-  const delay =
-    (message.data &&
-      message.data.requestDelay &&
-      message.data.requestDelay * 1000) ||
-    0;
-  const requestId = (message.data && message.data.requestId) || 0;
-  setTimeout(() => {
-    console.log(
-      `<== Sending response for requestId ${requestId} after delay: ${delay}`,
-    );
-    client.publish(
-      '/get-customers_res',
-      getPayload({ customers, requestId }, message.id),
-    );
-  }, delay);
+  client.publish('/get-customers_res', getPayload({ customers }, message.id));
 }
 
 /**
@@ -52,17 +38,9 @@ function getCustomers(packet): void {
  * @param message
  */
 function addCustomer(message): void {
-  console.log(
-    `\n========== <<< 'add-customer' message >>> ==========\n${JSON.stringify(
-      message,
-    )}\n==========================================================\n`,
-  );
-
-  const payload = message.data;
-
   customerList.push({
     id: lastId + 1,
-    name: payload.name,
+    name: message.name,
   });
   lastId++;
 }
@@ -91,8 +69,8 @@ async function main() {
       'Faye customer service starts...\n===============================',
     );
 
-    const sub1 = client.subscribe('/get-customers_ack', getCustomers);
-    const sub2 = client.subscribe('/add-customer', addCustomer);
+    client.subscribe('/get-customers_ack', getCustomers);
+    client.subscribe('/add-customer', addCustomer);
   } catch (err) {
     console.log('Error connecting to Faye: ', err.stack);
   }
