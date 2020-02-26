@@ -10,7 +10,7 @@ To get the code associated with these examples, [go here](/README.md).
 
 > We'll start with a little editorial :smile:
 >
-> As mentioned [in the article](), it's not mandatory that you fully understand the nuances of transporting observables, but it definitely **is** fun and interesting. I want to take you on a journey to explore some of the nuances of Nest microservices transporters that aren't immediately obvious. I'll take this from two perspectives:
+> As mentioned [in the article](https://dev.to/nestjs/part-3-completing-the-server-component-2fai-temp-slug-8783531?preview=be5cb28367d68473fba3e9a91c71084b83414317c27529045d1732b885da4cedb2020d8a7a32482e950f79db2908dee597c475f0f0b1a77bb73f0cab#overview), it's not mandatory that you fully understand the nuances of transporting observables, but it definitely **is** fun and interesting. I want to take you on a journey to explore some of the nuances of Nest microservices transporters that aren't immediately obvious. I'll take this from two perspectives:
 >
 > - As a potential **user of Nest microservices**, you may have some questions about why you should use them at all. For example, _what's the benefit of using something like the [TCP Transporter](https://docs.nestjs.com/microservices/basics#getting-started) vs. using REST (or GraphQL) over HTTP to hook up different Nest server apps?_ I know I had those questions when I first encountered Nest microservices. In fact, wanting to answer that was a big motivator for my extended research into Nest microservices.
 >
@@ -36,7 +36,7 @@ To get the code associated with these examples, [go here](/README.md).
 >
 > Let's consider some of the pro's and con's of these choices.
 >
-> The REST/HTTP choice feels like a natural. We know it's proven, deployment-friendly, and we know Nest can handle both sides of the communication channel. On the _requestor_ (_nestHttpApp_) side, we might use something like like [Axios](https://github.com/axios/axios) (support [built-in to Nest](https://docs.nestjs.com/techniques/http-module) already) to make remote requests. For features like Quality of Service, Load Balancing and Failover, we can take advantage of cloud native features like [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/), etc.
+> The REST/HTTP choice feels like a natural. We know it's proven, deployment-friendly, and we know Nest can handle both sides of the communication channel. On the _requestor_ (_nestHttpApp_) side, we might use something like [Axios](https://github.com/axios/axios) (support [built-in to Nest](https://docs.nestjs.com/techniques/http-module) already) to make remote requests. For features like Quality of Service, Load Balancing and Failover, we can take advantage of cloud native features like [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/), etc.
 >
 > How does the Nest Microservices alternative hold up? Well, we'll have to admit it isn't as "proven" as the first alternative, but it's no less proven than Nest as a whole, so if you're in this boat, you might as well consider putting up all the sails. Where things get **really** interesting is the richness of the _transporter communication layer_, as compared to HTTP. This is not a **knock** on REST/HTTP at all, just an open-eyed comparison.
 >
