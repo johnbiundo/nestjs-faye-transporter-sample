@@ -239,7 +239,7 @@ OK, that was all just preliminaries to get a feel for our multi-step task.
 
 #### Test 2: The Promise... is an Observable!
 
-For this test, we're going to be making the following remote request (from `nestHttpApp/src/app.controller.ts):
+For this test, we're going to be making the following remote request (from `nestHttpApp/src/app.controller.ts`):
 
 ```typescript
   @Get('jobs-promise-observable/:duration')
