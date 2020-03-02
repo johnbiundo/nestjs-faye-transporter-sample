@@ -27,7 +27,7 @@ The repository is structured with multiple branches, each corresponding to an ar
 <td><code>part1</code></td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 1: Introduction and Setup</a></td>
 </tr>
 <tr>
-<td><code>part2</code></td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 2: Basic Server Component</a></td>
+<td><code>part2</code></td><td><a href="https://dev.to/nestjs/part-2-basic-server-component-onk">Part 2: Basic Server Component</a></td>
 </tr>
 <tr>
 <td><code>part3</code></td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 3: Completing the Server Component</a></td>
@@ -108,7 +108,7 @@ Here's what it looks like with three tmux panes stacked vertically.
 
 ### Part 2: Basic Server Component
 
-This section corresponds to [Part 2 of the series](https://dev.to/nestjs/part-2-basic-server-component-5313-temp-slug-6221883?preview=2f3ceab6d03c32bc1d00e56a907f4c2e87b388b516d6009c5c72a6f5a31ef8da2a310c035b7b0a84cd9760ab2ac5d241dd2ceaceaf807ba1e745bbb9), and provides instructions for building and running the code in that section.
+This section corresponds to [Part 2 of the series](https://dev.to/nestjs/part-2-basic-server-component-onk), and provides instructions for building and running the code in that section.
 
 #### Checkout the Branch
 
@@ -128,7 +128,7 @@ The [article](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l) contains
 
 ### Part 3: Completing the Server Component
 
-This section corresponds to [Part 3 of the series](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l), and provides instructions for building and running the code in that section.
+This section corresponds to [Part 3 of the series](https://dev.to/nestjs/part-3-completing-the-server-component-4a80), and provides instructions for building and running the code in that section.
 
 #### Checkout the Branch
 
