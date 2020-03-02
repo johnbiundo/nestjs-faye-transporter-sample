@@ -63,7 +63,7 @@ $ sh build.sh
 
 #### Running the Code
 
-The most useful exercise is to run the Faye broker in one terminal window, the `customerApp` native app in a second and the `customerService` native app in a third. As mentioned, [tmux is a great fit](https://github.com/johnbiundo/nest-nats-sample#pro-tip-use-tmux-optional) for this, but you can just run 3 separate terminals or tabs if you so desire.
+The most useful exercise is to run the various components in multiple terminal windows: the Faye broker in one terminal, the `customerApp` native app in a second and the `customerService` native app in a third. As mentioned, [tmux is a great fit](https://github.com/johnbiundo/nest-nats-sample#pro-tip-use-tmux-optional) for this, but you can just run 3 separate terminals or tabs if you so desire.
 
 **Terminal 1**: run the Faye broker.
 
@@ -162,6 +162,46 @@ Run the `GET /customers` request again to see it return the new customer.
 
 With the verbose logging in place, it can be very helpful to observe the flow of messages between each of the active components in this setup to cement your understanding of how the pieces fit together.
 
-### Observables Side Trip
+#### Observables Side Trip
 
-[In the article](https://dev.to/nestjs/part-3-completing-the-server-component-2fai-temp-slug-8783531?preview=be5cb28367d68473fba3e9a91c71084b83414317c27529045d1732b885da4cedb2020d8a7a32482e950f79db2908dee597c475f0f0b1a77bb73f0cab#overview>) we make reference to a deep dive on handling observables. You can check out that [deep dive here](/observable-deepdive.md) any time you want. I encourage you to at least read the first section, but feel free to skip it and proceed directly to the specific implementation details for part 3 below.
+[In the article](https://dev.to/nestjs/part-3-completing-the-server-component-2fai-temp-slug-8783531?preview=be5cb28367d68473fba3e9a91c71084b83414317c27529045d1732b885da4cedb2020d8a7a32482e950f79db2908dee597c475f0f0b1a77bb73f0cab#overview>) we make reference to a deep dive on handling observables. You can check out that [deep dive here](/observable-deepdive.md) any time you want. I encourage you to at least read the first section.
+
+### Part 4: Initial Client Component
+
+This section corresponds to [Part 4 of the series](https://dev.to/nestjs/part-4-basic-client-component-298b-temp-slug-9977921?preview=21ec3d333fc6d9d92c11dcbd8430a5132e93390de84cb4804914aa143492e925e4299ca3eb7f376918c1ed77df56e29db2572e5d6f7ab235b3e5f2b9), and provides instructions for building and running the code in that section.
+
+#### Checkout the Branch
+
+For this part, you should be on branch `part4`:
+
+```bash
+$ # from the root folder (that you cloned into above)
+$ git checkout part4
+$ # build the artifacts
+$ # note that this is a shell script so you may have to make adjustments
+$ # if you're not on Linux, or fall back to running the individual
+$ # `npm install` commands in each sub-directory
+$ sh build.sh
+```
+
+[The article](https://dev.to/nestjs/part-4-basic-client-component-298b-temp-slug-9977921?preview=21ec3d333fc6d9d92c11dcbd8430a5132e93390de84cb4804914aa143492e925e4299ca3eb7f376918c1ed77df56e29db2572e5d6f7ab235b3e5f2b9) provides instructions for running various tests.
+
+### Part 5: Final Client Component
+
+This section corresponds to [Part 5 of the series](https://dev.to/nestjs/part-5-completing-the-client-component-hlh-temp-slug-2907984?preview=82c11163db963ca01d8d62d3a7b14843b422a6b28f46762d999bbe4b7035ad634d48bbbdd740e36376121aa673354ff5259f8b3028bceb931e800d9e), and provides instructions for building and running the code in that section.
+
+#### Checkout the Branch
+
+For this part, you should be on branch `part5`:
+
+```bash
+$ # from the root folder (that you cloned into above)
+$ git checkout part5
+$ # build the artifacts
+$ # note that this is a shell script so you may have to make adjustments
+$ # if you're not on Linux, or fall back to running the individual
+$ # `npm install` commands in each sub-directory
+$ sh build.sh
+```
+
+At the end of this article, you have a **complete, fully functional Faye transporter**. You should be able to run any of the routes successfully. Refer above to the previous sections for various samples, such as [Part 3](#part-3-completing-the-server-component). You can also explore the routes presented in the `nestHttpApp` controller, and run each of these. [This page](/observable-deepdive.md) also presents some interesting advanced test cases (which are present in the routes in this branch).
