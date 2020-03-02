@@ -1,4 +1,4 @@
-DEP_DIRS="customerService customerApp"
+DEP_DIRS="customerService customerApp nestHttpApp nestMicroservice"
 BUILD_DIRS="customerService customerApp nestHttpApp nestMicroservice"
 LINK_DIRS="nestHttpApp nestMicroservice"
 # install dependencies for each project

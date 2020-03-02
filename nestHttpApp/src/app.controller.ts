@@ -58,15 +58,20 @@ export class AppController {
    *
    * Use HTTPie: http post localhost:3000/customer name=<some name>
    */
-  @Post('customer')
-  addCustomer(@Body() customer: any) {
-    this.logger.debug(`#client#emit -> topic: "/add-customer"`);
 
-    this.client.emit('/add-customer', { name: customer.name });
-    return `Submitted customer ${customer.name}`;
-  }
+  // In Part4, we are building the client from scratch, and for the time-being,
+  // we aren't handling `Client#emit`
+
+  // @Post('customer')
+  // addCustomer(@Body() customer: any) {
+  //   this.logger.debug(`#client#emit -> topic: "/add-customer"`);
+
+  //   this.client.emit('/add-customer', { name: customer.name });
+  //   return `Submitted customer ${customer.name}`;
+  // }
 
   /*====================================================
+
     Following are handlers for our Observable deep dive
     These aren't really relevant to the *main* flow of the
     tutorial, but are used to develop a deeper understanding
@@ -139,20 +144,41 @@ export class AppController {
    * --each emitted result is transferred over the network and handed to our
    * **local** observable where we manage the response.
    *
-   * The server sends us a final total result at the completion of the stream
-   *
-   * Use HTTPie: http get localhost:3000/jobs-stream/1
+   * Use HTTPie: http get localhost:3000/jobs-stream1/1
    */
-  @Get('jobs-stream/:duration')
+  @Get('jobs-stream1/:duration')
   stream(@Param('duration') duration) {
-    return this.client.send('/jobs-stream', duration).pipe(
+    return this.client.send('/jobs-stream1', duration).pipe(
+      // do notification
+      tap(step => {
+        this.notify(step);
+      }),
+    );
+  }
+  /**
+   * Returning an observable that is aware of the stream, and sends us status
+   * events.
+   *
+   * Here we are dealing with a remote observable that streams multiple results
+   * back to us.  So we handle each of those results in our handler.
+   *
+   * Notice (by viewing the log) that we are getting multiple response messages
+   * --each emitted result is transferred over the network and handed to our
+   * **local** observable where we manage the response.
+   *
+   * The server sends us a final total result at the completion of the stream,
+   * which is what we return as the HTTP response (Nest handles this last part --
+   * "flattening" the observable -- automatically).
+   *
+   * Use HTTPie: http get localhost:3000/jobs-stream2/1
+   */
+  @Get('jobs-stream2/:duration')
+  stream2(@Param('duration') duration) {
+    return this.client.send('/jobs-stream2', duration).pipe(
       // do notification if this is a job completion event
       tap(step => {
         step.status && this.notify(step);
       }),
-      // return the final result (see server side for shape of response;
-      // final result is only one that has a `jobCount`)
-      filter(val => val && val.jobCount),
     );
   }
 
@@ -166,7 +192,7 @@ export class AppController {
    * Use HTTPie: http get localhost:3000/jobs-stream-final/1
    */
   @Get('jobs-stream-final/:duration')
-  stream2(@Param('duration') duration) {
+  stream3(@Param('duration') duration) {
     return this.client.send('/jobs-stream', duration);
   }
 
@@ -202,6 +228,30 @@ export class AppController {
     setTimeout(() => {
       coldStream$.subscribe(resp => response.json(resp));
     }, 5000);
+  }
+
+  /*
+    Following is the handler for Part 4, testing multiple outstanding
+    requests
+  */
+
+  @Get('race/:cid/:delay')
+  race(@Param('cid') cid, @Param('delay') delay) {
+    this.logger.log(`race with cid: ${cid}, delay: ${delay}`);
+    return this.client
+      .send('/race', {
+        requestId: cid,
+        requestDelay: parseInt(delay, 10),
+      })
+      .pipe(
+        tap(result => {
+          this.logger.log(
+            `Request for id: ${cid} completed with result: ${JSON.stringify(
+              result,
+            )}`,
+          );
+        }),
+      );
   }
 
   /********************************
