@@ -38,6 +38,10 @@ export class ClientFaye extends ClientProxy {
       const { err, response, isDisposed, id } = message;
 
       const callback = this.routingMap.get(id);
+      if (!callback) {
+        return undefined;
+      }
+
       if (isDisposed || err) {
         return callback({
           err,
@@ -101,7 +105,7 @@ export class ClientFaye extends ClientProxy {
     const serializedPacket = this.serializer.serialize(packet);
 
     return new Promise((resolve, reject) =>
-      this.fayeClient.publish(pattern, JSON.stringify(serializedPacket)),
+      this.fayeClient.publish(pattern, serializedPacket),
     );
   }
 
