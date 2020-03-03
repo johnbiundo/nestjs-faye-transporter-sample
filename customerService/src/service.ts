@@ -35,9 +35,10 @@ function getCustomers(packet): void {
 /**
  * Callback handler. This is registered for '/add-customer' topic.
  *
- * @param message inbound request payload
+ * @param packet inbound request payload
  */
-function addCustomer(message): void {
+function addCustomer(packet): void {
+  const message = parsePacket(packet);
   console.log(
     `\n========== <<< 'add-customer' message >>> ==========\n${JSON.stringify(
       message,
@@ -58,6 +59,14 @@ function getPayload(value, id) {
     isDisposed: true,
     id: id,
   };
+}
+
+function parsePacket(content) {
+  try {
+    return JSON.parse(content);
+  } catch (e) {
+    return content;
+  }
 }
 
 async function main() {
