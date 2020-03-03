@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository is the companion to the article series [Advanced NestJS Microservices](<(https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse)>) covering building a custom NestJS microservice transporter.
+This repository is the companion to the article series [Advanced NestJS Microservices](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l) covering building a custom NestJS microservice transporter.
 
 ### Get the code
 
@@ -24,28 +24,28 @@ The repository is structured with multiple branches, each corresponding to an ar
 <th>Branch</th><th>Article Link</th>
 </tr>
 <tr>
-<td><code>part1</code></td><td><a href="https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse">Part 1: Introduction and Setup</a></td>
+<td><code>part1</code></td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 1: Introduction and Setup</a></td>
 </tr>
 <tr>
-<td><code>part2</code></td><td><a href="https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse">Part 2: Basic Server Component</a></td>
+<td><code>part2</code></td><td><a href="https://dev.to/nestjs/part-2-basic-server-component-onk">Part 2: Basic Server Component</a></td>
 </tr>
 <tr>
-<td><code>part3</code></td><td><a href="https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse">Part 3: Completing the Server Component</a></td>
+<td><code>part3</code></td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 3: Completing the Server Component</a></td>
 </tr>
 <tr>
-<td><code>part4</code></td><td><a href="https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse">Part 4: Basic Client Component</a></td>
+<td><code>part4</code></td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 4: Basic Client Component</a></td>
 </tr>
 <tr>
-<td><code>part5</code></td><td><a href="https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse">Part 5: Completing the Client Component</a></td>
+<td><code>part5</code></td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 5: Completing the Client Component</a></td>
 </tr>
 <tr>
-<td>(no new code)</td><td><a href="https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse">Part 6: Survey of Built-in Transporters</a></td>
+<td>(no new code)</td><td><a href="https://dev.to/nestjs/part-1-introduction-and-setup-1a2l">Part 6: Survey of Built-in Transporters</a></td>
 </tr>
 </table>
 
 ### Part 1: Introduction and Setup
 
-This section corresponds to [Part 1 of the series](https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse), and provides instructions for building and running the code in that section.
+This section corresponds to [Part 1 of the series](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l), and provides instructions for building and running the code in that section.
 
 #### Checkout the Branch
 
@@ -108,7 +108,7 @@ Here's what it looks like with three tmux panes stacked vertically.
 
 ### Part 2: Basic Server Component
 
-This section corresponds to [Part 2 of the series](<[xxx](https://dev.to/nestjs/part-2-basic-server-component-5313-temp-slug-6221883?preview=2f3ceab6d03c32bc1d00e56a907f4c2e87b388b516d6009c5c72a6f5a31ef8da2a310c035b7b0a84cd9760ab2ac5d241dd2ceaceaf807ba1e745bbb9)>), and provides instructions for building and running the code in that section.
+This section corresponds to [Part 2 of the series](https://dev.to/nestjs/part-2-basic-server-component-onk), and provides instructions for building and running the code in that section.
 
 #### Checkout the Branch
 
@@ -124,11 +124,11 @@ $ # `npm install` commands in each sub-directory
 $ sh build.sh
 ```
 
-The [article](https://dev.to/nestjs/part-2-basic-server-component-5313-temp-slug-6221883?preview=2f3ceab6d03c32bc1d00e56a907f4c2e87b388b516d6009c5c72a6f5a31ef8da2a310c035b7b0a84cd9760ab2ac5d241dd2ceaceaf807ba1e745bbb9#running-the-test) contains instructions for running various requests.
+The [article](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l) contains instructions for running various requests.
 
 ### Part 3: Completing the Server Component
 
-This section corresponds to [Part 3 of the series](https://dev.to/nestjs/part-3-completing-the-server-component-2fai-temp-slug-8783531?preview=be5cb28367d68473fba3e9a91c71084b83414317c27529045d1732b885da4cedb2020d8a7a32482e950f79db2908dee597c475f0f0b1a77bb73f0cab), and provides instructions for building and running the code in that section.
+This section corresponds to [Part 3 of the series](https://dev.to/nestjs/part-3-completing-the-server-component-4a80), and provides instructions for building and running the code in that section.
 
 #### Checkout the Branch
 
@@ -164,11 +164,11 @@ With the verbose logging in place, it can be very helpful to observe the flow of
 
 #### Observables Side Trip
 
-[In the article](https://dev.to/nestjs/part-3-completing-the-server-component-2fai-temp-slug-8783531?preview=be5cb28367d68473fba3e9a91c71084b83414317c27529045d1732b885da4cedb2020d8a7a32482e950f79db2908dee597c475f0f0b1a77bb73f0cab#overview>) we make reference to a deep dive on handling observables. You can check out that [deep dive here](/observable-deepdive.md) any time you want. I encourage you to at least read the first section.
+[In the article](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l) we make reference to a deep dive on handling observables. You can check out that [deep dive here](/observable-deepdive.md) any time you want. I encourage you to at least read the first section.
 
 ### Part 4: Initial Client Component
 
-This section corresponds to [Part 4 of the series](https://dev.to/nestjs/part-4-basic-client-component-298b-temp-slug-9977921?preview=21ec3d333fc6d9d92c11dcbd8430a5132e93390de84cb4804914aa143492e925e4299ca3eb7f376918c1ed77df56e29db2572e5d6f7ab235b3e5f2b9), and provides instructions for building and running the code in that section.
+This section corresponds to [Part 4 of the series](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l), and provides instructions for building and running the code in that section.
 
 #### Checkout the Branch
 
@@ -184,11 +184,11 @@ $ # `npm install` commands in each sub-directory
 $ sh build.sh
 ```
 
-[The article](https://dev.to/nestjs/part-4-basic-client-component-298b-temp-slug-9977921?preview=21ec3d333fc6d9d92c11dcbd8430a5132e93390de84cb4804914aa143492e925e4299ca3eb7f376918c1ed77df56e29db2572e5d6f7ab235b3e5f2b9) provides instructions for running various tests.
+[The article](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l) provides instructions for running various tests.
 
 ### Part 5: Final Client Component
 
-This section corresponds to [Part 5 of the series](https://dev.to/nestjs/part-5-completing-the-client-component-hlh-temp-slug-2907984?preview=82c11163db963ca01d8d62d3a7b14843b422a6b28f46762d999bbe4b7035ad634d48bbbdd740e36376121aa673354ff5259f8b3028bceb931e800d9e), and provides instructions for building and running the code in that section.
+This section corresponds to [Part 5 of the series](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l), and provides instructions for building and running the code in that section.
 
 #### Checkout the Branch
 
