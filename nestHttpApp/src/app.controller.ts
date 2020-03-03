@@ -139,20 +139,57 @@ export class AppController {
    * --each emitted result is transferred over the network and handed to our
    * **local** observable where we manage the response.
    *
-   * The server sends us a final total result at the completion of the stream
+   * We process each result with `tap` and call our `notify()` function to update
+   * anyone interested in the status of the in progress jobs.
    *
-   * Use HTTPie: http get localhost:3000/jobs-stream/1
+   * We also run a `reduce` function at the completion of the stream to produce
+   * a final summary result to return to our HTTP client requestor.
+   *
+   * Use HTTPie: http get localhost:3000/jobs-stream1/1
    */
-  @Get('jobs-stream/:duration')
+  @Get('jobs-stream1/:duration')
   stream(@Param('duration') duration) {
-    return this.client.send('/jobs-stream', duration).pipe(
+    return this.client.send('/jobs-stream1', duration).pipe(
+      // do notification
+      tap(step => {
+        this.notify(step);
+      }),
+      reduce(
+        (acc, val) => {
+          return {
+            jobCount: acc.jobCount + 1,
+            totalWorkTime: acc.totalWorkTime + val.workTime,
+          };
+        },
+        { jobCount: 0, totalWorkTime: 0 },
+      ),
+    );
+  }
+  /**
+   * Returning an observable that is aware of the stream, and sends us status
+   * events.
+   *
+   * Here we are dealing with a remote observable that streams multiple results
+   * back to us.  So we handle each of those results in our handler.
+   *
+   * Notice (by viewing the log) that we are getting multiple response messages
+   * --each emitted result is transferred over the network and handed to our
+   * **local** observable where we manage the response.
+   *
+   * The server also sends us a final total result at the completion of the stream,
+   * which is what we return as the HTTP response (Nest handles this last part --
+   * "flattening" the observable by returning only the final value in the stream
+   *  automatically).
+   *
+   * Use HTTPie: http get localhost:3000/jobs-stream2/1
+   */
+  @Get('jobs-stream2/:duration')
+  stream2(@Param('duration') duration) {
+    return this.client.send('/jobs-stream2', duration).pipe(
       // do notification if this is a job completion event
       tap(step => {
         step.status && this.notify(step);
       }),
-      // return the final result (see server side for shape of response;
-      // final result is only one that has a `jobCount`)
-      filter(val => val && val.jobCount),
     );
   }
 
@@ -166,8 +203,8 @@ export class AppController {
    * Use HTTPie: http get localhost:3000/jobs-stream-final/1
    */
   @Get('jobs-stream-final/:duration')
-  stream2(@Param('duration') duration) {
-    return this.client.send('/jobs-stream', duration);
+  stream3(@Param('duration') duration) {
+    return this.client.send('/jobs-stream1', duration);
   }
 
   /**
@@ -184,7 +221,7 @@ export class AppController {
   @Get('jobs-delayed-stream/:duration')
   delayedStream(@Param('duration') duration, @Response() response) {
     this.logger.log('Waiting 5 seconds before launching request...');
-    const coldStream$ = this.client.send('/jobs-stream', duration).pipe(
+    const coldStream$ = this.client.send('/jobs-stream1', duration).pipe(
       tap(step => {
         this.notify(step);
       }),
@@ -202,6 +239,30 @@ export class AppController {
     setTimeout(() => {
       coldStream$.subscribe(resp => response.json(resp));
     }, 5000);
+  }
+
+  /*
+    Following is the handler for Part 4, testing multiple outstanding
+    requests
+  */
+
+  @Get('race/:cid/:delay')
+  race(@Param('cid') cid, @Param('delay') delay) {
+    this.logger.log(`race with cid: ${cid}, delay: ${delay}`);
+    return this.client
+      .send('/race', {
+        requestId: cid,
+        requestDelay: parseInt(delay, 10),
+      })
+      .pipe(
+        tap(result => {
+          this.logger.log(
+            `Request for id: ${cid} completed with result: ${JSON.stringify(
+              result,
+            )}`,
+          );
+        }),
+      );
   }
 
   /********************************
