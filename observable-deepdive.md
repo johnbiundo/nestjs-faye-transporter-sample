@@ -322,7 +322,7 @@ $ http get localhost:3000/jobs-observable/1   # 1 is the base duration
 
 The semantics of this request are **identical** to the first test, where we returned a promise. Nest handles all this under the covers, automatically for us. Thus the timing and results are the same as in the first test.
 
-This might be a bit of a yawn on the surface, but under the covers it's remarkable that Nest is handling all of this mapping for us in a transparent fashion. And this leads us to our big finish...
+This might be a bit of a yawn on the surface, but under the covers it's remarkable that Nest is handling all of this marshalling for us in a transparent fashion. And this leads us to our big finish...
 
 #### Test 4: Returning a **Custom** Observable from the Server
 
