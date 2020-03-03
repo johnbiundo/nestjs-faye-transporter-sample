@@ -330,17 +330,34 @@ For this test, we're going to invoke the `'/jobs-stream'` handler in our microse
 Let's start by understanding the implementation of that handler (from `nestMicroservice/src/app.controller.ts`):
 
 ```typescript
-  @MessagePattern('/jobs-stream')
   doStream(duration): Observable<any> {
     return new Observable(observer => {
+      // build array of promises to run jobs #1, #2, #3
       const jobs = [1, 2, 3].map(job => this.workService.doStep(job, duration));
+
+      // run the promises in series
       Promise.mapSeries(jobs, jobResult => {
+        // promise has resolved (job has completed)
         observer.next(jobResult);
-      }).then(() => {
+        return jobResult;
+      }).then(results => {
+        // all promises (jobs) have resolved
+        //
+        // generate final result
+        const finalResult = results.reduce(
+          (acc, val) => {
+            return {
+              jobCount: acc.jobCount + 1,
+              totalWorkTime: acc.totalWorkTime + val.workTime,
+            };
+          },
+          { jobCount: 0, totalWorkTime: 0 },
+        );
+        // send final result and complete the observable
+        observer.next(finalResult);
         observer.complete();
       });
-    });
-  }
+    })
 ```
 
 Now let's take a look at our requestor (from `nestHttpApp/src/app.controller.ts`):
@@ -352,16 +369,6 @@ Now let's take a look at our requestor (from `nestHttpApp/src/app.controller.ts`
       tap(step => {
         this.notify(step);
       }),
-      reduce(
-        (acc, val) => {
-          return {
-            jobCount: acc.jobCount + 1,
-            totalWorkTime: acc.totalWorkTime + parseInt(val.workTime, 10),
-          };
-        },
-        { jobCount: 0, totalWorkTime: 0 },
-      ),
-    );
   }
 ```
 
