@@ -82,8 +82,8 @@ To simulate the multi-step process, we introduce the `WorkService`. Open up `nes
 
   The **time that a task takes** is the **product** of `step` \* `duration`. For example:
 
-  - `doStep(2, 3)` // will resolve after 6 seconds (2 \_ 3).
-  - `doStep(3, 3)` // will resolve after 9 seconds (3 \_ 3).
+  - `doStep(2, 3)` // will resolve after 6 seconds (2 \* 3).
+  - `doStep(3, 3)` // will resolve after 9 seconds (3 \* 3).
 
 * `doThreeSteps(duration): Promise<any>`
 
