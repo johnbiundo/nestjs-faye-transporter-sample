@@ -2,7 +2,7 @@
 
 ### Resources
 
-In case you landed here from Google, this page is a detailed companion/side-bar for this [article series on Nest Microservices Custom Transporters](https://dev.to/nestjs/build-a-custom-transporter-for-nestjs-microservices-dc6-temp-slug-6007254?preview=d3e07087758ff2aac037f47fb67ad5b465f45272f9c5c9385037816b139cf1ed089616c711ed6452184f7fb913aed70028a73e14fef8e3e41ee7c3fc#requestresponse).
+In case you landed here from Google, this page is a detailed companion/side-bar for this [article series on Nest Microservices Custom Transporters](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l).
 
 To get the code associated with these examples, [go here](/README.md).
 
