@@ -304,7 +304,7 @@ For this test, we're going to invoke the `'/jobs-observable'` handler in our mic
   }
 ```
 
-This time, the remote handler returns an observable instead of a promise. We do this with the RxJS `from` operator.
+This time, the remote handler returns an observable instead of a promise. We do this with the RxJS `from` operator (in the `nestMicroservice` handler).
 
 ```typescript
   @MessagePattern('/jobs-observable')
