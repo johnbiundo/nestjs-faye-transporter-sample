@@ -74,13 +74,31 @@ export class AppController {
   }
 
   /**
+   * Emit interim status results at the completion of each job
+   *
+   * @param duration base duration unit for each job
+   */
+  @MessagePattern('/jobs-stream1')
+  doStream1(duration): Observable<any> {
+    return new Observable(observer => {
+      // build array of promises to run jobs #1, #2, #3
+      const jobs = [1, 2, 3].map(job => this.workService.doStep(job, duration));
+
+      // run the promises in series
+      Promise.mapSeries(jobs, jobResult => {
+        // promise has resolved (job has completed)
+        observer.next(jobResult);
+      }).then(() => observer.complete());
+    });
+  }
+  /**
    * Emit interim status results at the completion of each job, and
    * a final result upon completion of all jobs
    *
    * @param duration base duration unit for each job
    */
-  @MessagePattern('/jobs-stream')
-  doStream(duration): Observable<any> {
+  @MessagePattern('/jobs-stream2')
+  doStream2(duration): Observable<any> {
     return new Observable(observer => {
       // build array of promises to run jobs #1, #2, #3
       const jobs = [1, 2, 3].map(job => this.workService.doStep(job, duration));
@@ -109,4 +127,30 @@ export class AppController {
       });
     });
   }
+
+  /*
+    Following is the handler for Part 4, testing multiple outstanding
+    requests
+  */
+  @MessagePattern('/race')
+  async race(data: any): Promise<any> {
+    this.logger.log(`Got '/race' with ${JSON.stringify(data)}`);
+
+    const delay = (data.requestDelay && data.requestDelay * 1000) || 0;
+    const cid = (data.requestId && data.requestId) || 0;
+
+    const customers = [{ id: 1, name: 'fake' }];
+
+    function sleep() {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+        }, delay);
+      });
+    }
+
+    await sleep();
+    return { customers, cid, delay };
+  }
 }
+
