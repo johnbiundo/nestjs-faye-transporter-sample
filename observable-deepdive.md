@@ -10,7 +10,7 @@ To get the code associated with these examples, [go here](/README.md).
 
 > We'll start with a little editorial :smile:
 >
-> As mentioned [in the article](https://dev.to/nestjs/part-3-completing-the-server-component-2fai-temp-slug-8783531?preview=be5cb28367d68473fba3e9a91c71084b83414317c27529045d1732b885da4cedb2020d8a7a32482e950f79db2908dee597c475f0f0b1a77bb73f0cab#overview), it's not mandatory that you fully understand the nuances of transporting observables, but it definitely **is** fun and interesting. I want to take you on a journey to explore some of the nuances of Nest microservices transporters that aren't immediately obvious. I'll take this from two perspectives:
+> As mentioned [in the article](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l), it's not mandatory that you fully understand the nuances of transporting observables, but it definitely **is** fun and interesting. I want to take you on a journey to explore some of the nuances of Nest microservices transporters that aren't immediately obvious. I'll take this from two perspectives:
 >
 > - As a potential **user of Nest microservices**, you may have some questions about why you should use them at all. For example, _what's the benefit of using something like the [TCP Transporter](https://docs.nestjs.com/microservices/basics#getting-started) vs. using REST (or GraphQL) over HTTP to hook up different Nest server apps?_ I know I had those questions when I first encountered Nest microservices. In fact, wanting to answer that was a big motivator for my extended research into Nest microservices.
 >
@@ -52,7 +52,7 @@ To get the code associated with these examples, [go here](/README.md).
 >
 > I hope you enjoy them, and that they provide good motivation for considering using Nest Microservices (and transporters), and some rationale for why custom transporters are implemented the way they are.
 
-You'll notice on this branch that we've added a new project: `nestHttpApp`. This is a standard Nest HTTP app for serving HTTP requests like `GET /customers`. We'll be focusing a lot of attention on this app and the transporter component it uses (the `ClientProxy`) in the upcoming articles ([Part 4: Basic Client Component](<(https://dev.to/nestjs/part-4-basic-client-component-298b-temp-slug-9977921?preview=21ec3d333fc6d9d92c11dcbd8430a5132e93390de84cb4804914aa143492e925e4299ca3eb7f376918c1ed77df56e29db2572e5d6f7ab235b3e5f2b9)>) and [Part 5: Completing the Client Component](https://dev.to/nestjs/part-5-completing-the-client-component-hlh-temp-slug-2907984?preview=82c11163db963ca01d8d62d3a7b14843b422a6b28f46762d999bbe4b7035ad634d48bbbdd740e36376121aa673354ff5259f8b3028bceb931e800d9e)). We've included it here, along with a **full implementation** of the client component (the one we'll be building from scratch in Parts 4 and 5) for testing purposes.
+You'll notice on this branch that we've added a new project: `nestHttpApp`. This is a standard Nest HTTP app for serving HTTP requests like `GET /customers`. We'll be focusing a lot of attention on this app and the transporter component it uses (the `ClientProxy`) in the upcoming articles ([Part 4: Basic Client Component](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l) and [Part 5: Completing the Client Component](https://dev.to/nestjs/part-1-introduction-and-setup-1a2l). We've included it here, along with a **full implementation** of the client component (the one we'll be building from scratch in Parts 4 and 5) for testing purposes.
 
 ### How the Tests Work
 
