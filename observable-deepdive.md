@@ -218,10 +218,12 @@ In this test, the microservice is returning a promise that resolves after 3 seco
 
 The easiest way to see that the job took 3 seconds is to look at the timestamps on the outbound and inbound messages on the `nestHttpApp` console log (I modified the log slightly for readability):
 
-> [Nest] **9:27:12** AM [OutboundMessageI] -->> Serializing outbound message:
-> {"pattern":"/jobs-promise","data":"1","id":"239cfc10-1635-4079-bb49-2c67cbf8f538"}
-> [Nest] **9:27:15** AM [InboundResponse] <<-- deserializing inbound response:
-> {"err":null,"response":{"jobCount":3,"totalWorkTime":6},"isDisposed":true,"id":"239cfc10-1635-4079-bb49-2c67cbf8f538"}
+```bash
+[Nest] **9:27:12** AM [OutboundMessageI] -->> Serializing outbound message:
+{"pattern":"/jobs-promise","data":"1","id":"239cfc10-1635-4079-bb49-2c67cbf8f538"}
+[Nest] **9:27:15** AM [InboundResponse] <<-- deserializing inbound response:
+{"err":null,"response":{"jobCount":3,"totalWorkTime":6},"isDisposed":true,"id":"239cfc10-1635-4079-bb49-2c67cbf8f538"}
+```
 
 You can also see the same thing (though you see _inbound_ followed by _outbound_) by looking at the log for `nestMicroservice` in terminal 3.
 
