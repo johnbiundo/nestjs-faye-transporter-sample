@@ -326,11 +326,132 @@ This might be a bit of a yawn on the surface, but under the covers it's remarkab
 
 #### Test 4: Returning a **Custom** Observable from the Server
 
-For this test, we're going to invoke the `'/jobs-stream'` handler in our microservice.
+For this test, we're going to invoke the `'/jobs-stream1'` handler in our microservice.
 Let's start by understanding the implementation of that handler (from `nestMicroservice/src/app.controller.ts`):
 
 ```typescript
-  doStream(duration): Observable<any> {
+  doStream1(duration): Observable<any> {
+    return new Observable(observer => {
+      // build array of promises to run jobs #1, #2, #3
+      const jobs = [1, 2, 3].map(job => this.workService.doStep(job, duration));
+
+      // run the promises in series
+      Promise.mapSeries(jobs, jobResult => {
+        // promise has resolved (job has completed)
+        observer.next(jobResult);
+      }).then(() => observer.complete());
+    });
+  }
+```
+
+We're using `Promise.mapSeries()` to run three jobs (built above in `jobs`) in series.  As each job completes (each Promise resolves), `mapSeries()` calls our callback with the value of the resolved promise.  We simply emit that result, and after the final result, close the observer. 
+
+Now let's take a look at our requestor (from `nestHttpApp/src/app.controller.ts`):
+
+```typescript
+  @Get('jobs-stream1/:duration')
+  stream(@Param('duration') duration) {
+    return this.client.send('/jobs-stream1', duration).pipe(
+      // do notification
+      tap(step => {
+        this.notify(step);
+      }),
+      reduce(
+        (acc, val) => {
+          return {
+            jobCount: acc.jobCount + 1,
+            totalWorkTime: acc.totalWorkTime + val.workTime,
+          };
+        },
+        { jobCount: 0, totalWorkTime: 0 },
+      ),
+    );
+  }
+```
+
+Here, we are piping the observable stream through a couple of RxJS operators:
+* `tap` allows us to simply examine the stream without changing it.  We use this to capture each event in the stream (representing each job response), and run our `notify()` code.
+
+> Hooray!  With this code, we've now completed our mission from the beginning of this article! (Hopefully! We'll test in a moment).
+
+* `reduce` let's us take the stream of job data and *reduce* it to a single value that we want to return to our HTTP client (browser). Here, we simply total up the number of jobs and their individual duration and produce a single output.
+
+To run the test, in terminal 2, run the following HTTPie command (or equivalent with curl or postman):
+
+```bash
+$ # from directory nestHttpApp
+$ http get localhost:3000/jobs-stream/1   # 1 is the base duration
+```
+
+This should produce entries like this in the `nestMicroservice` log (slightly edited/formatted for clarity):
+
+```bash
+[Nest] ... 10:33:53 AM   [InboundDeserializer] <<-- deserializing inbound message:
+    {"pattern":"/jobs-stream1","data":"2","id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
+        with options: {"channel":"/jobs-stream1"}
+
+[Nest] ... 10:33:55 AM   [OutboundSerializer] -->> Serializing outbound response:
+    {"err":null,"response":{"status":"Step 1 Complete after 2 seconds.","workTime":2},"id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
+
+[Nest] ... 10:33:57 AM   [OutboundSerializer] -->> Serializing outbound response:
+    {"err":null,"response":{"status":"Step 2 Complete after 4 seconds.","workTime":4},"id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
+
+[Nest] ... 10:33:59 AM   [OutboundSerializer] -->> Serializing outbound response:
+    {"err":null,"response":{"status":"Step 3 Complete after 6 seconds.","workTime":6},"isDisposed":true,"id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
+```
+
+And like this in the `nestHttpApp` log (again, slightly edited/formatted for clarity):
+
+```bash
+[Nest] ... 10:33:53 AM   [OutboundSerializer] -->> Serializing outbound message:
+    {"pattern":"/jobs-stream1","data":"2","id":"992b4e82-2333-4f64-8c72-c2e1ba95534a"}
+
+[Nest] ... 10:33:55 AM   [InboundDeserializer] <<-- deserializing inbound response:
+    {"err":null,"response":{"status":"Step 1 Complete after 2 seconds.","workTime":2},"id":"992b4e82-2333-4f64-8c72-c2e1ba95534a"}
+
+[Nest] ... 10:33:55 AM   [AppController] =====>>>> Sending notification: Step 1 Complete after 2 seconds.
+
+[Nest] ... 10:33:57 AM   [InboundDeserializer] <<-- deserializing inbound response:
+    {"err":null,"response":{"status":"Step 2 Complete after 4 seconds.","workTime":4},"id":"992b4e82-2333-4f64-8c72-c2e1ba95534a"}
+
+[Nest] ... 10:33:57 AM   [AppController] =====>>>> Sending notification: Step 2 Complete after 4 seconds.
+
+[Nest] ... 10:33:59 AM   [InboundDeserializer] <<-- deserializing inbound response:
+    {"err":null,"response":{"status":"Step 3 Complete after 6 seconds.","workTime":6},"isDisposed":true,"id":"992b4e82-2333-4f64-8c72-c2e1ba95534a"}
+
+[Nest] ... 10:33:59 AM   [AppController] =====>>>> Sending notification: Step 3 Complete after 6 seconds.
+```
+
+And a final HTTP response like this:
+
+```json
+{
+    "jobCount": 3,
+    "totalWorkTime": 12
+}
+```
+
+Now, this might seem a bit like cheating.  Way back at the top of the article we said rejected the idea of decomposing the steps and calling them serially from the client, but our `reduce()` function smells a little like we're doing that.
+
+So let's push that work up to the server.  For this, we'll run the route called `jobs-stream2/:duration`.  Here's how the `nestHttpApp` controller looks now (notice we don't have to run the `reduce()`):
+
+```typescript
+  @Get('jobs-stream2/:duration')
+  stream2(@Param('duration') duration) {
+    return this.client.send('/jobs-stream2', duration).pipe(
+      // do notification if this is a job completion event
+      tap(step => {
+        step.status && this.notify(step);
+      }),
+    );
+  }
+```
+
+The reason for this is we made our server-side observable a bit smarter.  Let's look at the handler for the `jobs-stream2` pattern in `nestMicroservice`:
+
+```typescript
+  @MessagePattern('/jobs-stream2')
+  doStream2(duration): Observable<any> {
     return new Observable(observer => {
       // build array of promises to run jobs #1, #2, #3
       const jobs = [1, 2, 3].map(job => this.workService.doStep(job, duration));
@@ -357,24 +478,19 @@ Let's start by understanding the implementation of that handler (from `nestMicro
         observer.next(finalResult);
         observer.complete();
       });
-    })
-```
-
-Now let's take a look at our requestor (from `nestHttpApp/src/app.controller.ts`):
-
-```typescript
-  @Get('jobs-stream/:duration')
-  stream(@Param('duration') duration) {
-    return this.client.send('/jobs-stream', duration).pipe(
-      tap(step => {
-        this.notify(step);
-      }),
+    });
   }
 ```
 
-To run the test, in terminal 2, run the following HTTPie command (or equivalent with curl or postman):
+In essence all we did -- yes, it's really this simple -- was move our `reduce()` function to the server.  
 
-```bash
-$ # from directory nestHttpApp
-$ http get localhost:3000/jobs-stream/1   # 1 is the base duration
-```
+Now this raises an interesting question.  On the client side, we're **returning** the Observable as our HTTP response.  How do we return a stream over HTTP? The reason this works is that Nest automatically converts the stream to a single HTTP response (as it must -- HTTP requires a single response!). To do that, it simply returns the **final** result from the stream, which is our `reduce()`'d summary.
+
+It's pretty neat that Nest does this automatically without any intervention by us.  In fact, one of the hidden gems of Nest is that it pretty consistently *does the right thing* in cases like this, saving us a bunch of boilerplate. In many cases, returning the final result (in many cases it's the **only** result) from the stream is a good option.  When it's not, we can intercept, as we did in the previous example, and operate on the stream on the client side.
+
+#### Additional Tests
+
+Feel free to play around with the additional routes:
+
+* `'jobs-stream-final'`: demonstrates how Nest has an intelligent default of returning the final result in a stream if we don't otherwise handle the individual results
+* `'jobs-delayed-stream'`: demonstrates the *cold observable*, and shows that the stream (request processing) doesn't begin until we actually subscribe
