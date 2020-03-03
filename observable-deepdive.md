@@ -46,7 +46,7 @@ To get the code associated with these examples, [go here](/README.md).
 >
 > In our HTTP app, we could take a few different approaches. We could decompose the server-side task and issue the individual requests from the client, taking some action upon completion of each step. Or, we could set up some sort of _side channel sockety_ thing to have our _nestMicroservice_ notify our _nestHttpApp_.
 >
-> But really, this requirement feels tailor made for... reactive programming... like a job for `RxJS`. What if... we could return an observable from the request, and **stream** the interim results back to our _nestHttpApp_, and let it compose the results? Well guess what? Nest microservice transporters to the rescue!
+> But really, this requirement feels tailor made for... reactive programming... like a job for `RxJS`. What if... we could return an observable from the request, and **stream** the interim results back to our _nestHttpApp_, along with a final result when the steps are complete? Well guess what? Nest microservice transporters to the rescue!
 >
 > We'll explore this and some related topics in the samples below.
 >
@@ -75,8 +75,8 @@ To simulate the multi-step process, we introduce the `WorkService`. Open up `nes
 
   ```typescript
   {
-    status: string; // a short description of the task result
-    workTime: number; // the total time this step took
+    status: string, // a short description of the task result
+    workTime: number, // the total time this step took
   }
   ```
 
