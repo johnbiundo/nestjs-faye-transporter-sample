@@ -370,7 +370,7 @@ Now let's take a look at our requestor (from `nestHttpApp/src/app.controller.ts`
 ```
 
 Here, we are piping the observable stream through a couple of RxJS operators:
-* `tap` allows us to simple examine the stream without changing it.  We use this to capture each event in the stream (representing each job response), and run our `notify()` code.
+* `tap` allows us to simply examine the stream without changing it.  We use this to capture each event in the stream (representing each job response), and run our `notify()` code.
 
 > Hooray!  With this code, we've now completed our mission from the beginning of this article! (Hopefully! We'll test in a moment).
 
@@ -390,13 +390,13 @@ This should produce entries like this in the `nestMicroservice` log (slightly ed
     {"pattern":"/jobs-stream1","data":"2","id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
         with options: {"channel":"/jobs-stream1"}
 
-[Nest] ... 10:33:55 AM   [OutboundResponseIdentitySerializer] -->> Serializing outbound response:
+[Nest] ... 10:33:55 AM   [OutboundSerializer] -->> Serializing outbound response:
     {"err":null,"response":{"status":"Step 1 Complete after 2 seconds.","workTime":2},"id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
 
-[Nest] ... 10:33:57 AM   [OutboundResponseIdentitySerializer] -->> Serializing outbound response:
+[Nest] ... 10:33:57 AM   [OutboundSerializer] -->> Serializing outbound response:
     {"err":null,"response":{"status":"Step 2 Complete after 4 seconds.","workTime":4},"id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
 
-[Nest] ... 10:33:59 AM   [OutboundResponseIdentitySerializer] -->> Serializing outbound response:
+[Nest] ... 10:33:59 AM   [OutboundSerializer] -->> Serializing outbound response:
     {"err":null,"response":{"status":"Step 3 Complete after 6 seconds.","workTime":6},"isDisposed":true,"id":"ac47b9f3-ace6-4656-b4d0-4c8027e19ed8"}
 ```
 
@@ -431,7 +431,7 @@ And a final HTTP response like this:
 }
 ```
 
-Now, this might seem a bit like cheating.  We said we didn't want to decompose the steps and call them serially from the client, but our `reduce()` function smells a little like we're doing that.
+Now, this might seem a bit like cheating.  Way back at the top of the article we said rejected the idea of decomposing the steps and calling them serially from the client, but our `reduce()` function smells a little like we're doing that.
 
 So let's push that work up to the server.  For this, we'll run the route called `jobs-stream2/:duration`.  Here's how the `nestHttpApp` controller looks now (notice we don't have to run the `reduce()`):
 
@@ -482,9 +482,11 @@ The reason for this is we made our server-side observable a bit smarter.  Let's 
   }
 ```
 
-In essense all we did -- yes, it's really that simple -- was move our reduce function to the server.  By the way, the reason this works is that on the client, we are returning our Observable to the HTTP requestor.  Nest automatically converts the stream to a single HTTP response (as it must -- HTTP is dumb!). To do that, it simply returns the final result from the stream, which is our `reduce()`'d summary.
+In essence all we did -- yes, it's really this simple -- was move our `reduce()` function to the server.  
 
-It's pretty neat that Nest does this for us. In many cases, returning the final (in many cases it's the **only**) result from the stream is a good option.  When it's not, we can intercept, as we did in the previous example, and operate on the stream on the client side.
+Now this raises an interesting question.  On the client side, we're **returning** the Observable as our HTTP response.  How do we return a stream over HTTP? The reason this works is that Nest automatically converts the stream to a single HTTP response (as it must -- HTTP requires a single response!). To do that, it simply returns the **final** result from the stream, which is our `reduce()`'d summary.
+
+It's pretty neat that Nest does this automatically without any intervention by us.  In fact, one of the hidden gems of Nest is that it pretty consistently *does the right thing* in cases like this, saving us a bunch of boilerplate. In many cases, returning the final result (in many cases it's the **only** result) from the stream is a good option.  When it's not, we can intercept, as we did in the previous example, and operate on the stream on the client side.
 
 #### Additional Tests
 
