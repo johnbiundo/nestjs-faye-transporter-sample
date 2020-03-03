@@ -58,20 +58,15 @@ export class AppController {
    *
    * Use HTTPie: http post localhost:3000/customer name=<some name>
    */
+  @Post('customer')
+  addCustomer(@Body() customer: any) {
+    this.logger.debug(`#client#emit -> topic: "/add-customer"`);
 
-  // In Part4, we are building the client from scratch, and for the time-being,
-  // we aren't handling `Client#emit`
-
-  // @Post('customer')
-  // addCustomer(@Body() customer: any) {
-  //   this.logger.debug(`#client#emit -> topic: "/add-customer"`);
-
-  //   this.client.emit('/add-customer', { name: customer.name });
-  //   return `Submitted customer ${customer.name}`;
-  // }
+    this.client.emit('/add-customer', { name: customer.name });
+    return `Submitted customer ${customer.name}`;
+  }
 
   /*====================================================
-
     Following are handlers for our Observable deep dive
     These aren't really relevant to the *main* flow of the
     tutorial, but are used to develop a deeper understanding
@@ -144,6 +139,12 @@ export class AppController {
    * --each emitted result is transferred over the network and handed to our
    * **local** observable where we manage the response.
    *
+   * We process each result with `tap` and call our `notify()` function to update
+   * anyone interested in the status of the in progress jobs.
+   *
+   * We also run a `reduce` function at the completion of the stream to produce
+   * a final summary result to return to our HTTP client requestor.
+   *
    * Use HTTPie: http get localhost:3000/jobs-stream1/1
    */
   @Get('jobs-stream1/:duration')
@@ -153,6 +154,15 @@ export class AppController {
       tap(step => {
         this.notify(step);
       }),
+      reduce(
+        (acc, val) => {
+          return {
+            jobCount: acc.jobCount + 1,
+            totalWorkTime: acc.totalWorkTime + val.workTime,
+          };
+        },
+        { jobCount: 0, totalWorkTime: 0 },
+      ),
     );
   }
   /**
@@ -166,9 +176,10 @@ export class AppController {
    * --each emitted result is transferred over the network and handed to our
    * **local** observable where we manage the response.
    *
-   * The server sends us a final total result at the completion of the stream,
+   * The server also sends us a final total result at the completion of the stream,
    * which is what we return as the HTTP response (Nest handles this last part --
-   * "flattening" the observable -- automatically).
+   * "flattening" the observable by returning only the final value in the stream
+   *  automatically).
    *
    * Use HTTPie: http get localhost:3000/jobs-stream2/1
    */
@@ -193,7 +204,7 @@ export class AppController {
    */
   @Get('jobs-stream-final/:duration')
   stream3(@Param('duration') duration) {
-    return this.client.send('/jobs-stream', duration);
+    return this.client.send('/jobs-stream1', duration);
   }
 
   /**
@@ -210,7 +221,7 @@ export class AppController {
   @Get('jobs-delayed-stream/:duration')
   delayedStream(@Param('duration') duration, @Response() response) {
     this.logger.log('Waiting 5 seconds before launching request...');
-    const coldStream$ = this.client.send('/jobs-stream', duration).pipe(
+    const coldStream$ = this.client.send('/jobs-stream1', duration).pipe(
       tap(step => {
         this.notify(step);
       }),
